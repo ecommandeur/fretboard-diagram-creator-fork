@@ -112,6 +112,15 @@ text.marker {
 
 /* Actions on nodes */
 
+#string-selector {
+    /* background-color: lightgray; */
+    margin: auto;
+    padding-bottom: 10px;
+    width: 280px;
+    display: flex;
+    justify-content: space-between;
+}
+
 #color-selector {
     /* background-color: lightgray; */
     margin: auto;

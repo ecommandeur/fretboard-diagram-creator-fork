@@ -41,14 +41,13 @@ class Fretboard {
         this.consts = {
             offsetX: 40,
             offsetY: 30,
-            stringIntervals: [24, 19, 15, 10, 5, 0],
+            stringIntervals: opts.stringIntervals,
             markers: [3, 5, 7, 9, 12, 15, 17, 19, 21],
             fretWidth: 70,
             stringSpacing: 40,
             minStringSize: 0.2,
             circleRadius: 18,
-            notes: [['E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C', 'C#', 'D', 'D#'],
-                    ['E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B', 'C', 'Db', 'D', 'Eb']],
+            notes: opts.notes,
             sign: ['♯', '♭'],
         };
         this.consts.numStrings = this.consts.stringIntervals.length;
@@ -84,6 +83,15 @@ class Fretboard {
         this.erase();
         this.draw();
         return this.consts.sign[untoggledEnharmonic];
+    }
+
+    setNotesAndStringIntervals(notes, stringIntervals) {
+        this.consts.notes = notes;
+        this.consts.stringIntervals = stringIntervals;
+        this.consts.numStrings = this.consts.stringIntervals.length;
+        this.consts.fretHeight = (this.consts.numStrings - 1) * this.consts.stringSpacing;
+        this.erase();
+        this.draw();
     }
 
     setFretWindow(fretWindow) {
@@ -494,10 +502,49 @@ class Fretboard {
 const svg = document.getElementById('fretboard');
 const endFret = document.getElementById('end-fret');
 
+//notes 4-string bass tuning: E1, A1, D2, G2
+//notes 5 string bass tuning: B0, E1, A1, D2, G2
+//notes 6 string guitar tuning: E2, A2, D3, G3, B3, E4
+
+const notesEstandard = [['E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B', 'C', 'C♯', 'D', 'D♯'],
+                        ['E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭', 'B', 'C', 'D♭', 'D', 'E♭']];
+const notesBstandard = [['B', 'C', 'C♯', 'D', 'D♯','E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯'],
+                        ['B', 'C', 'D♭', 'D', 'E♭','E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭']];
+
+const stringIntervalsSixString = [24, 19, 15, 10, 5, 0];
+const stringIntervalsFiveString = [20, 15, 10, 5, 0];
+const stringIntervalsFourString = [15, 10, 5, 0];
+
 const fretboard = new Fretboard({
     svg: svg,
-    endFret: endFret
+    endFret: endFret,
+    notes: notesEstandard,
+    stringIntervals: stringIntervalsFourString
 })
+
+/* String selector buttons */
+const fourStringButton = document.getElementById("four-string");
+fourStringButton.addEventListener('click', (event) => {
+    const doStringChange = window.confirm("Do you really want to change to a four string diagram?");
+    if (doStringChange) {
+        fretboard.setNotesAndStringIntervals(notesEstandard, stringIntervalsFourString);
+    }
+});
+const fiveStringButton = document.getElementById("five-string");
+fiveStringButton.addEventListener('click', (event) => {
+    const doStringChange = window.confirm("Do you really want to change to a five string diagram?");
+    if (doStringChange) {
+        fretboard.setNotesAndStringIntervals(notesEstandard, stringIntervalsFiveString);
+    }
+});
+
+const sixStringButton = document.getElementById("six-string");
+sixStringButton.addEventListener('click', (event) => {
+    const doStringChange = window.confirm("Do you really want to change to a six string diagram?");
+    if (doStringChange) {
+        fretboard.setNotesAndStringIntervals(notesEstandard, stringIntervalsSixString);
+    }
+});
 
 /* Button for toggeling unselected notes */
 
